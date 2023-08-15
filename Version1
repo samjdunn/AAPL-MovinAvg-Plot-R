@@ -1,0 +1,62 @@
+# GOAL OF PROJECT IS TO BE ABLE TO VIZUALIZE THE 30 day SMA, EMA & VWAP OF AAPL USING ADJUSTED PRICES####
+
+## Open Required Packages ####
+library('quantmod')
+library('TTR')
+
+## Set Start & End Dates as well as ticker####
+
+start_date <- as.Date('2020-01-01')
+
+end_date <- Sys.Date()
+
+ticker <- 'AAPL'
+
+## Retrieve Price History from Yahoo Finance ####
+
+getSymbols(ticker,
+           src = 'yahoo',
+           from = start_date,
+           to = end_date,
+)
+
+## Calculate SMA EMA & VWAP using TTR ####
+
+AAPL_SMA <- SMA(AAPL$AAPL.Adjusted , 
+                n = 30
+)
+
+AAPL_EMA <- EMA(AAPL$AAPL.Adjusted , 
+                n = 30
+)
+
+AAPL_VWAP <- VWAP(AAPL$AAPL.Adjusted, 
+                  AAPL$AAPL.Volume, 
+                  n = 30
+)
+
+## Plot Price & Moving Avgs on Chart ####
+
+plot(AAPL$AAPL.Adjusted, # Plot the initial adjusted price for comparison
+     main = 'AAPL Price & Moving Averages.',
+     col = 'green4',
+     bg = 'gray'
+)
+
+lines(AAPL_SMA,
+      col = 'red4',
+      lty = 3
+)
+lines(AAPL_EMA,
+      col = 'purple4',
+      lty = 4
+)
+lines(AAPL_VWAP,
+      col = 'indianred3',
+      lty = 2
+)
+legend(x = 'bottomright',
+       title = 'Legend',
+       legend = c('Price','SMA','EMA','VWAP'),
+       col = c('green4','red4','purple4','indianred3')
+)
